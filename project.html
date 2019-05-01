@@ -1,0 +1,170 @@
+<html>
+<style>
+    table {
+        border: 1px
+    }
+</style>
+
+<body>
+    <input onclick="change()" type="button" value="Load Data" id="myButton1" />
+    <table id="table"></table>
+    <div id='body'></div>
+</body>
+<script>
+    function change() {
+        document.getElementById("myButton1").value = "Refresh data";
+        this.data = [{
+            name: "sahil",
+            middle_name: 'none',
+            last_name: "kansal",
+            address: 'home',
+            email: 'abc@gmail.com',
+            phone_no: '123456789',
+            role: 'manager'
+        },
+        {
+            name: "john",
+            middle_name: 'none',
+            last_name: "terry",
+            address: 'home',
+            email: 'abc@gmail.com',
+            phone_no: '123456789',
+            role: 'manager'
+        },
+        {
+            name: "luke",
+            middle_name: 'none',
+            last_name: "shaw",
+            address: 'home',
+            email: 'abc@gmail.com',
+            phone_no: '123456789',
+            role: 'manager'
+        }
+        ]
+        re()
+    }
+    var re = () => {
+        document.getElementById("table").innerHTML =`
+        <td>name</td>
+        <td>middle name</td>
+        <td>last name</td>
+        <td>address</td>
+        <td>email</td>
+        <td>phone no</td>
+        <td>role</td>
+        <td>`+ data.map((id, index) => `
+        <tr id="${index}">
+        <td>${id.name}</td>
+        <td>${id.middle_name}</td>
+        <td>${id.last_name}</td>
+        <td>${id.address}</td>
+        <td>${id.email}</td>
+        <td>${id.phone_no}</td>
+        <td>${id.role}</td>
+        <td>
+        <button id='${index}' value='edit' id='edit' onClick='edit(${index})'>edit</button>
+        </td>
+        <td>
+        <button id='${index}' value='deletee' onClick='deletee(${index})'>delete</button>
+        </td>
+        </tr>`).join('')
+        var table = document.getElementById("table");
+
+        var rowCount = table.rows.length;
+        var row = table.insertRow(rowCount);
+        var colCount = table.rows[0].cells.length;
+        for (var i = 0; i < 7; i++) {
+            var newcell = row.insertCell(i);
+            newcell.innerHTML = `<tr><td><input type='text' id='new'></input></td>`;
+        };
+        var newcell = row.insertCell(7);
+        newcell.innerHTML = `<td><button onclick=CreateNew(this)>add</button></td>`;
+        // var header = row.insertCell(-1);
+        // hearder.innerHTML = `<td><button onclick=CreateNew(this)>add</button></td>`;
+
+    }
+    function editt(value) {
+        console.log(value)
+        var activeRow = value;
+        var tab = document.getElementById('table').rows[activeRow];
+        console.log(activeRow)
+        console.log(activeRow)
+        var tab = document.getElementById('table').rows[activeRow];
+        var obj = {};
+        console.log(tab)
+        col = ['name', 'middle_name', 'last_name', 'address', 'email', 'phone_no', 'role']
+        for (i = 0; i < this.col.length; i++) {
+            var td = tab.getElementsByTagName("td")[i];
+            if (td.childNodes[0].getAttribute('type') == 'text') {      // CHECK IF ELEMENT IS A TEXTBOX OR SELECT.
+                var txtVal = td.childNodes[0].value;
+                console.log(txtVal)
+                if (txtVal != '') {
+                    obj[this.col[i]] = txtVal.trim();
+                }
+                else {
+                    obj = '';
+                    alert('all fields are compulsory');
+                    break;
+                }
+            }
+        }
+        if (Object.keys(obj).length > 0) {      // CHECK IF OBJECT IS NOT EMPTY.
+            this.data[value] = obj;             // PUSH (ADD) DATA TO THE JSON ARRAY.
+            // this.createTable();                 // REFRESH THE TABLE.
+            console.log(data)
+            re()
+        }
+    }
+    function deletee(value) {
+        data.splice((value), 1);
+        re()
+    }
+    function edit(oButton) {
+       // console.log(oButton)
+        var activeRow =oButton+1;
+        var tab = document.getElementById('table').rows[activeRow];
+        console.log(activeRow)
+        for (i = 0; i < 7; i++) {
+            var td = tab.getElementsByTagName("td")[i];
+            var ele = document.createElement('input');      // TEXTBOX.
+            ele.setAttribute('type', 'text');
+            ele.setAttribute('value', td.innerText);
+            console.log(td.innerText)
+            td.innerText = '';
+            td.appendChild(ele);
+        }
+        tab.getElementsByTagName("td")[7].innerHTML = `<button onclick='editt(${activeRow})'>save</button><button style='margin-left: 3px' onclick='re()'>discard</button>`
+    }
+    var CreateNew = function (oButton) {
+        var activeRow = oButton.parentNode.parentNode.rowIndex;
+        console.log(activeRow)
+        var tab = document.getElementById('table').rows[activeRow];
+        var obj = {};
+        console.log(tab)
+        // ADD NEW VALUE TO myBooks ARRAY.
+        col = ['name', 'middle_name', 'last_name', 'address', 'email', 'phone_no', 'role']
+        for (i = 0; i < this.col.length; i++) {
+            var td = tab.getElementsByTagName("td")[i];
+            if (td.childNodes[0].getAttribute('type') == 'text') {      // CHECK IF ELEMENT IS A TEXTBOX OR SELECT.
+                var txtVal = td.childNodes[0].value;
+                console.log(txtVal)
+                if (txtVal != '') {
+
+                    obj[this.col[i]] = txtVal.trim();
+                }
+                else {
+                    obj = '';
+                    alert('all fields are compulsory');
+                    break;
+                }
+            }
+        }
+        if (Object.keys(obj).length > 0) {
+            data.push(obj);
+            console.log(data)
+            re()
+        }
+    }
+</script>
+
+</html>
