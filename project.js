@@ -1,8 +1,7 @@
-
     const load = () => {
         document.getElementById("myButton").value = "Refresh data";
           this.data = [{
-            name: "sahil0",
+            name: "sahil",
             middle_name: 'none',
             last_name: "kansal",
             address: 'home',
@@ -63,7 +62,7 @@
         // const colCount = table.rows[0].cells.length;
         for (let i = 0; i < 7; i++) {
             const newcell = row.insertCell(i);
-            newcell.innerHTML = `<tr><td><input type='text' id='new'></input></td>`;
+            newcell.innerHTML = `<tr><td><input type='text' id='new'class="form-control"></input></td>`;
         }
         const newcell = row.insertCell(7);
         newcell.innerHTML = `<td><button class="btn btn-info" onclick=createNew(${data.length+1})>add</button></td>`;
@@ -81,7 +80,7 @@
                     obj[this.col[i]] = txtVal.trim();
                 }
                 else {
-                    obj = '';
+                    // obj = '';
                     alert('all fields are compulsory');
                     break;
                 }
@@ -102,6 +101,7 @@
             const ele = document.createElement('input');
             ele.setAttribute('type', 'text');
             ele.setAttribute('value', td.innerText);
+            ele.setAttribute('class',"form-control")
             console.log(td.innerText)
             td.innerText = '';
             td.appendChild(ele);
@@ -121,7 +121,7 @@
                     obj[this.col[i]] = txtVal.trim();
                 }
                 else {
-                    obj = '';
+                    // obj = '';
                     alert('all fields are compulsory');
                     break;
                 }
