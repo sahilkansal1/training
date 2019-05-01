@@ -4,17 +4,16 @@
         border: 1px
     }
 </style>
-
 <body>
-    <input onclick="change()" type="button" value="Load Data" id="myButton1" />
+    <input onclick="Load()" type="button" value="Load Data" id="myButton" />
     <table id="table"></table>
     <div id='body'></div>
 </body>
 <script>
-    function change() {
-        document.getElementById("myButton1").value = "Refresh data";
+    function Load() {
+        document.getElementById("myButton").value = "Refresh data";
         this.data = [{
-            name: "sahil",
+            name: "sahil0",
             middle_name: 'none',
             last_name: "kansal",
             address: 'home',
@@ -41,10 +40,11 @@
             role: 'manager'
         }
         ]
-        re()
+        col = ['name', 'middle_name', 'last_name', 'address', 'email', 'phone_no', 'role']
+        Render()
     }
-    var re = () => {
-        document.getElementById("table").innerHTML =`
+    var Render = () => {
+        document.getElementById("table").innerHTML =`<tr>
         <td>name</td>
         <td>middle name</td>
         <td>last name</td>
@@ -52,8 +52,8 @@
         <td>email</td>
         <td>phone no</td>
         <td>role</td>
-        <td>`+ data.map((id, index) => `
-        <tr id="${index}">
+        <td>`+data.map((id, index) => `
+        <tr id="${index+1}">
         <td>${id.name}</td>
         <td>${id.middle_name}</td>
         <td>${id.last_name}</td>
@@ -62,14 +62,13 @@
         <td>${id.phone_no}</td>
         <td>${id.role}</td>
         <td>
-        <button id='${index}' value='edit' id='edit' onClick='edit(${index})'>edit</button>
+        <button id='${index+1}' value='edit' id='edit' onClick='Edit(${index})'>edit</button>
         </td>
         <td>
-        <button id='${index}' value='deletee' onClick='deletee(${index})'>delete</button>
+        <button id='${index+1}' value='deletee' onClick='Deletee(${index})'>delete</button>
         </td>
         </tr>`).join('')
         var table = document.getElementById("table");
-
         var rowCount = table.rows.length;
         var row = table.insertRow(rowCount);
         var colCount = table.rows[0].cells.length;
@@ -79,23 +78,15 @@
         };
         var newcell = row.insertCell(7);
         newcell.innerHTML = `<td><button onclick=CreateNew(this)>add</button></td>`;
-        // var header = row.insertCell(-1);
-        // hearder.innerHTML = `<td><button onclick=CreateNew(this)>add</button></td>`;
-
     }
-    function editt(value) {
-        console.log(value)
+     var Save=(value)=> {
         var activeRow = value;
         var tab = document.getElementById('table').rows[activeRow];
-        console.log(activeRow)
-        console.log(activeRow)
         var tab = document.getElementById('table').rows[activeRow];
         var obj = {};
-        console.log(tab)
-        col = ['name', 'middle_name', 'last_name', 'address', 'email', 'phone_no', 'role']
         for (i = 0; i < this.col.length; i++) {
             var td = tab.getElementsByTagName("td")[i];
-            if (td.childNodes[0].getAttribute('type') == 'text') {      // CHECK IF ELEMENT IS A TEXTBOX OR SELECT.
+            if (td.childNodes[0].getAttribute('type') == 'text') {     
                 var txtVal = td.childNodes[0].value;
                 console.log(txtVal)
                 if (txtVal != '') {
@@ -108,32 +99,27 @@
                 }
             }
         }
-        if (Object.keys(obj).length > 0) {      // CHECK IF OBJECT IS NOT EMPTY.
-            this.data[value] = obj;             // PUSH (ADD) DATA TO THE JSON ARRAY.
-            // this.createTable();                 // REFRESH THE TABLE.
-            console.log(data)
-            re()
-        }
+            this.data[value-1] = obj;             // PUSH (ADD) DATA TO THE JSON ARRAY.
+            Render()                            // REFRESH THE TABLE.
     }
-    function deletee(value) {
+    function Deletee(value) {
         data.splice((value), 1);
-        re()
+        Render()
     }
-    function edit(oButton) {
-       // console.log(oButton)
-        var activeRow =oButton+1;
+    function Edit(value) {
+        var activeRow = value+1;
         var tab = document.getElementById('table').rows[activeRow];
         console.log(activeRow)
-        for (i = 0; i < 7; i++) {
+        for (i = 0; i < this.col.length; i++) {
             var td = tab.getElementsByTagName("td")[i];
-            var ele = document.createElement('input');      // TEXTBOX.
+            var ele = document.createElement('input');     
             ele.setAttribute('type', 'text');
             ele.setAttribute('value', td.innerText);
             console.log(td.innerText)
             td.innerText = '';
             td.appendChild(ele);
         }
-        tab.getElementsByTagName("td")[7].innerHTML = `<button onclick='editt(${activeRow})'>save</button><button style='margin-left: 3px' onclick='re()'>discard</button>`
+        tab.getElementsByTagName("td")[7].innerHTML = `<button onclick='Save(${activeRow})'>save</button><button style='margin-left: 3px' onclick='Render()'>discard</button>`
     }
     var CreateNew = function (oButton) {
         var activeRow = oButton.parentNode.parentNode.rowIndex;
@@ -141,15 +127,13 @@
         var tab = document.getElementById('table').rows[activeRow];
         var obj = {};
         console.log(tab)
-        // ADD NEW VALUE TO myBooks ARRAY.
-        col = ['name', 'middle_name', 'last_name', 'address', 'email', 'phone_no', 'role']
+        // ADD NEW VALUE TO Data ARRAY.      
         for (i = 0; i < this.col.length; i++) {
             var td = tab.getElementsByTagName("td")[i];
             if (td.childNodes[0].getAttribute('type') == 'text') {      // CHECK IF ELEMENT IS A TEXTBOX OR SELECT.
                 var txtVal = td.childNodes[0].value;
                 console.log(txtVal)
                 if (txtVal != '') {
-
                     obj[this.col[i]] = txtVal.trim();
                 }
                 else {
@@ -159,12 +143,8 @@
                 }
             }
         }
-        if (Object.keys(obj).length > 0) {
             data.push(obj);
-            console.log(data)
-            re()
-        }
+            Render()    
     }
 </script>
-
 </html>
